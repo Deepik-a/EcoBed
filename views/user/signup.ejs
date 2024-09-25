@@ -1,0 +1,168 @@
+<%- include('navbar') %>
+<style>
+    body{
+        background-color: rgb(214, 239, 216);
+    }
+</style>
+
+
+<section class="min-vh-100 d-flex align-items-center">
+  <div class="container py-5">
+    <div class="row d-flex align-items-center justify-content-center">
+      
+      <!-- Image Column -->
+      <div class="col-md-8 col-lg-7 col-xl-6 mb-4 mb-md-0 text-center">
+        <img src="../../public/assets/logo.png" class="img-fluid" alt="Phone image">
+      </div>
+
+      <!-- Form Column -->
+      <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
+        <form action="/signup" method="post" id="register-form">
+          
+          <!-- Name -->
+          <div class="form-outline mb-4">
+            <input type="text" name="name" required id="form1Example13" class="form-control form-control-lg" />
+            <label class="form-label" for="form1Example13">Name</label>
+          </div>
+  
+          <!-- Email input -->
+          <div class="form-outline mb-4">
+            <input type="email" name="email"  required id="form1Example13" class="form-control form-control-lg" />
+            <label class="form-label" for="form1Example13">Email address</label>
+          </div>
+  
+          <!-- Phone input -->
+          <div class="form-outline mb-4">
+            <input type="text" name="phone" required id="form1Example23" class="form-control form-control-lg" />
+            <label class="form-label" for="form1Example23">Phone Number</label>
+          </div>
+  
+<!-- Password input -->
+<div class="form-outline mb-4 position-relative">
+  <input type="password" name="password" required id="password" class="form-control form-control-lg" />
+  <label class="form-label" for="password">Password</label>
+  <span id="toggle-password-1" class="position-absolute top-50 end-0 translate-middle-y me-3">
+    <i class="bi bi-eye-slash"></i>
+  </span>
+</div>
+
+<!-- Confirm Password input -->
+<div class="form-outline mb-4 position-relative">
+  <input type="password" name="confirmpassword" required id="confirmpassword" class="form-control form-control-lg" />
+  <label class="form-label" for="confirmpassword">Confirm Password</label>
+  <span id="toggle-password-2" class="position-absolute top-50 end-0 translate-middle-y me-3">
+    <i class="bi bi-eye-slash"></i>
+  </span>
+</div>
+
+
+  
+          <!-- Submit button -->
+          <button type="submit" class="btn btn-secondary btn-lg btn-block" id="register-btn"style="background-color: rgb(80, 141, 78); color: white;">
+            Signup
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <%- include('footer') %>
+
+
+  <!-----------------------------------------------------------validation--------------------------> 
+
+
+
+  <script>
+document.getElementById('toggle-password-1').addEventListener('click', function () {
+    togglePassword('password', this);
+});
+
+document.getElementById('toggle-password-2').addEventListener('click', function () {
+    togglePassword('confirmpassword', this);
+});
+
+function togglePassword(id, toggle) {
+    const pass = document.getElementById(id);
+    const type = pass.getAttribute('type') === 'password' ? 'text' : 'password';
+    pass.setAttribute('type', type);
+    toggle.innerHTML = type === 'password' ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
+}
+
+
+    const registerForm = document.getElementById('register-form')[0]
+    const name = document.getElementsByName('name')[0]
+    const phone = document.getElementsByName('phone')[0]
+    const email = document.getElementsByName('email')[0]
+    const password = document.getElementsByName('password')[0]
+    const confirmPassword = document.getElementsByName('confirmpassword')[0]
+    const signUpButton = document.getElementById('register-btn')
+
+    function checkEmail(email) {
+        const re = /\S+@\S+\.\s+/;
+        return re.test(email)
+    }
+    function validatePassword(password) {
+        if (password.length < 8) {
+            return false
+        }
+
+        if (!/[A-Z]/.test(password)) {
+            return false
+        }
+
+        if (!/[a-z]/.test(password)) {
+            return false
+        }
+
+        if (!/\d/.test(password)) {
+            return false
+        }
+        if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
+            return false;
+        }
+        return true
+    }
+    function validatePhone(phone) {
+        const phoneRe = /^\d{10}$/;
+        return phoneRe.test(phone);
+    }
+
+    registerForm.addEventListener('submit', (e) => {
+        e.preventDefault()
+        if (name.value.trim() === "" || name.value.length > 25 || name.value.length < 5 || !isNaN(name.value)) {
+            Swal.fire({
+                title: "Error",
+                text: "Name must not be empty ,Minimum 6 letters , must be within 30 charters long and should not contain numbers",
+                icon: "error"
+            });
+        } else if (!validatePhone(phone.value)) {
+            Swal.fire({
+                title: "Error",
+                text: "Phone number must be 10 digits",
+                icon: "error"
+            });
+        } else if (checkEmail(email.value)) {
+            Swal.fire({
+                title: "Error",
+                text: "Email must be valid",
+                icon: "error"
+            });
+        } else if (!validatePassword(password.value)) {
+            Swal.fire({
+                title: "Error",
+                text: "Enter a strong password",
+                icon: "error"
+            });
+        } else if (password.value != confirmpassword.value) {
+            Swal.fire({
+                title: "Error",
+                text: "Password Must be same",
+                icon: "error"
+            });
+        } else {
+            registerForm.submit()
+        }
+    })
+</script>

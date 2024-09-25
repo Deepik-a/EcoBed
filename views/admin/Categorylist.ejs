@@ -1,0 +1,140 @@
+<!-- Table Start -->
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-sm-12 col-xl-6">          
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Category Management</h6>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Category Name</th>
+                                <th scope="col">Edit</th>
+                                <th scope="col">List/Unlist</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% categories.forEach((category, index) => { %>
+                            <tr>
+                                <th scope="row"><%= index + 1 %></th>
+                                <td><%= category.name %></td>
+                                <td>  
+                                    <form class="edit-category-form" data-id="<%= category._id %>">
+                                        <div class="form-group">
+                                            <label for="categoryName-<%= category._id %>">Edit Category Name</label>
+                                            <input type="text" id="categoryName-<%= category._id %>" name="name" value="<%= category.name %>" required class="form-control">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Update Category</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <!-- Wrap List/Unlist button inside a form -->
+                                    <form class="toggle-category-form" data-id="<%= category._id %>" data-status="<%= category.isDeleted %>">
+                                        <button type="submit" class="btn btn-sm <%= category.isDeleted ? 'btn-danger' : 'btn-success' %>">
+                                            <%= category.isDeleted ? 'Unlist' : 'List' %>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Table End -->
+
+
+<script>
+    // Reusable function for SweetAlert success
+    function showSuccessAlert(title, message, reload = false) {
+        Swal.fire({
+            icon: 'success',
+            title: title,
+            text: message
+        }).then(() => {
+            if (reload) location.reload();
+        });
+    }
+
+    // Reusable function for SweetAlert error
+    function showErrorAlert(message) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: message
+        });
+    }
+
+    // Handle List/Unlist form submission for soft deleting or restoring categories
+    document.querySelectorAll('.toggle-category-form').forEach(form => {
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const categoryId = this.getAttribute('data-id');
+            const isDeleted = this.getAttribute('data-status') === 'true';
+            const action = isDeleted ? 'list' : 'unlist';
+            const endpoint = `/admin/delete/${categoryId}`;
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ isDeleted: !isDeleted })
+                });
+
+                if (response.ok) {
+                    showSuccessAlert(`Category ${isDeleted ? 'Listed' : 'Unlisted'}`, 
+                                     `The category has been ${isDeleted ? 'listed' : 'unlisted'} successfully.`, 
+                                     true);
+                } else {
+                    throw new Error('Failed to update category status');
+                }
+            } catch (error) {
+                showErrorAlert(error.message);
+            }
+        });
+    });
+
+    // Handle Edit Category form submission
+    document.querySelectorAll('.edit-category-form').forEach(form => {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const categoryId = this.dataset.id;
+            const name = this.querySelector(`input[name="name"]`).value;
+
+            try {
+                const response = await fetch(`/admin/editCategory/${categoryId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name })
+                });
+
+                if (response.ok) {
+                    showSuccessAlert('Category Updated', `The category name has been updated to "${name}".`, true);
+                } else {
+                    const result = await response.json();
+                    throw new Error(result.message || 'Failed to update category');
+                }
+            } catch (error) {
+                showErrorAlert(error.message);
+            }
+        });
+    });
+</script>
+
+</script>
+
+
+
+        
+
+
