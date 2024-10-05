@@ -1,140 +1,281 @@
-<!-- Table Start -->
+<!-- Sidebar Start -->
 <div class="container-fluid pt-4 px-4">
-    <div class="row g-4">
-        <div class="col-sm-12 col-xl-6">          
-        <div class="col-12">
-            <div class="bg-light rounded h-100 p-4">
-                <h6 class="mb-4">Category Management</h6>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Category Name</th>
-                                <th scope="col">Edit</th>
-                                <th scope="col">List/Unlist</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% categories.forEach((category, index) => { %>
-                            <tr>
-                                <th scope="row"><%= index + 1 %></th>
-                                <td><%= category.name %></td>
-                                <td>  
-                                    <form class="edit-category-form" data-id="<%= category._id %>">
-                                        <div class="form-group">
-                                            <label for="categoryName-<%= category._id %>">Edit Category Name</label>
-                                            <input type="text" id="categoryName-<%= category._id %>" name="name" value="<%= category.name %>" required class="form-control">
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Update Category</button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <!-- Wrap List/Unlist button inside a form -->
-                                    <form class="toggle-category-form" data-id="<%= category._id %>" data-status="<%= category.isDeleted %>">
-                                        <button type="submit" class="btn btn-sm <%= category.isDeleted ? 'btn-danger' : 'btn-success' %>">
-                                            <%= category.isDeleted ? 'Unlist' : 'List' %>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                            <% }) %>
-                        </tbody>
-                        
-                    </table>
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-md-3">
+        <div class="sidebar pe-4 pb-3 bg-light">
+          <nav class="navbar navbar-light">
+            <a href="index.html" class="navbar-brand mx-4 mb-3">
+              <h3 class="text-primary">
+                <i class="fa fa-hashtag me-2"></i>Dashboard
+              </h3>
+            </a>
+            <div class="d-flex align-items-center ms-4 mb-4">
+              <div class="position-relative">
+                <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+              </div>
+              <div class="ms-3">
+                <h6 class="mb-0">DEEPIKA PS</h6>
+                <span>Admin</span>
+              </div>
+            </div>
+            <div class="navbar-nav w-100">
+              <a href="index.html" class="nav-item nav-link active">
+                <i class="fa fa-tachometer-alt me-2"></i>Dashboard
+              </a>
+              <div class="nav-item">
+                <a href="#" class="nav-link dropdown-toggle">
+                  <i class="fa fa-laptop me-2"></i>Sales Report
+                </a>
+              </div>
+  
+              <!-- Category Section with Toggle -->
+              <div class="nav-item">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#CategoryMenu" id="categoryMenuLink">
+                  <i class="fa fa-keyboard me-2"></i>Category
+                </a>
+                <div id="CategoryMenu" class="collapse">
+                  <ul class="navbar-nav ps-3">
+                    <li class="nav-item">
+                      <a href="/admin/addCategory" class="nav-link">
+                        <i class="fa fa-plus me-2"></i>Add Category
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/admin/editCategory" class="nav-link">
+                        <i class="fa fa-list me-2"></i>Category List
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="nav-item">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#productMenu" id="productMenuLink">
+                    <i class="fa fa-keyboard me-2"></i>Products
+                </a>
+                <div id="productMenu" class="collapse">
+                    <ul class="navbar-nav ps-3">
+                        <li class="nav-item">
+                            <a href="/admin/addProduct" class="nav-link">
+                                <i class="fa fa-plus me-2"></i>Add Product
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/editProduct" class="nav-link">
+                                <i class="fa fa-list me-2"></i>Product List
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                </div>
+  
+              <a href="/admin/users" class="nav-item nav-link">
+                <i class="fa fa-table me-2"></i>Customers
+              </a>
+              <a href="chart.html" class="nav-item nav-link">
+                <i class="fa fa-chart-bar me-2"></i>Coupons
+              </a>
+              <a href="chart.html" class="nav-item nav-link">
+                <i class="fa fa-chart-bar me-2"></i>Offers
+              </a>
+              <a href="chart.html" class="nav-item nav-link">
+                <i class="fa fa-chart-bar me-2"></i>Popups
+              </a>
+              <a href="logout" class="nav-item nav-link">
+                <i class="fa fa-sign-out-alt me-2"></i>Logout
+              </a>
+            </div>
+          </nav>
+        </div>
+      </div>
+
+
+      <!-- Content Start -->
+<div class="content">
+  
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
+        <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+            <h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2>
+        </a>
+        <a href="#" class="sidebar-toggler flex-shrink-0">
+            <i class="fa fa-bars"></i>
+        </a>
+        
+        <div class="navbar-nav align-items-center ms-auto">
+           
+        
+        
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link">
+                
+                    <span class="d-none d-lg-inline-flex">Deepika </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                    <a href="#" class="dropdown-item">My Profile</a>
+                    <!-- <a href="#" class="dropdown-item">Settings</a> -->
+                    <a href="#" class="dropdown-item">Log Out</a>
                 </div>
             </div>
         </div>
+    </nav>
+    <!-- Navbar End -->
+      
+    <div class="col-md-9">
+      <div class="bg-light rounded h-100 p-4">
+        <h6 class="mb-4">Category Management</h6>
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Category Name</th>
+                <th scope="col">Status</th> <!-- New Status Column -->
+                <th scope="col">Edit</th>
+                <th scope="col">List/Unlist</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% categories.forEach((category, index) => { %>
+                <tr>
+                  <th scope="row"><%= index + 1 %></th>
+                  <td><%= category.name %></td>
+            
+                  <!-- Display current status with badge -->
+                  <td>
+                    <span class="badge <%= category.isDeleted ? 'bg-danger' : 'bg-success' %>">
+                      <%= category.isDeleted ? 'Blocked' : 'Active' %>
+                    </span>
+                  </td>
+            
+                  <!-- Edit Category Form -->
+                  <td>
+                    <form class="edit-category-form" data-id="<%= category._id %>">
+                      <div class="form-group">
+                        <label for="categoryName-<%= category._id %>">Edit Category Name</label>
+                        <input type="text" id="categoryName-<%= category._id %>" name="name" value="<%= category.name %>" required class="form-control">
+                      </div>
+                      <button type="submit" class="btn btn-primary mt-2">Update Category</button>
+                    </form>
+                  </td>
+            
+                  <!-- Block/Unblock Button -->
+                  <td>
+                    <button 
+                      class=" <%= category.isDeleted ? 'btn-success' : 'btn-danger' %> block-unblock-btn"
+                      data-id="<%= category._id %>" 
+                      data-action="<%= category.isDeleted ? 'unblock' : 'block' %>">
+                      <%= category.isDeleted ? 'Unblock' : 'Block' %>
+                    </button>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-</div>
-<!-- Table End -->
+    
+    <script>
+      // Reusable function for SweetAlert success
+      function showSuccessAlert(title, message, reload = false) {
+          Swal.fire({
+              icon: 'success',
+              title: title,
+              text: message,
+              showConfirmButton: true,
+          }).then(() => {
+              if (reload) location.reload();
+          });
+      }
+  
+      // Reusable function for SweetAlert error
+      function showErrorAlert(message) {
+          Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: message,
+              showConfirmButton: true,
+          });
+      }
+  
+   
+     
+  
+      // Handle Edit Category form submission
+      document.querySelectorAll('.edit-category-form').forEach(form => {
+          form.addEventListener('submit', async function(e) {
+              e.preventDefault();
+              const categoryId = this.dataset.id;
+              const name = this.querySelector(`input[name="name"]`).value;
+  
+              try {
+                  const response = await fetch(`/admin/editCategory/${categoryId}`, {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({ name })
+                  });
+  
+                  if (response.ok) {
+                      showSuccessAlert('Category Updated', `The category name has been updated to "${name}".`, true);
+                  } else {
+                      const result = await response.json();
+                      throw new Error(result.message || 'Failed to update category');
+                  }
+              } catch (error) {
+                  showErrorAlert(error.message);
+              }
+          });
+      });
 
 
-<script>
-    // Reusable function for SweetAlert success
-    function showSuccessAlert(title, message, reload = false) {
-        Swal.fire({
+
+       // Handle Block/Unblock functionality
+  document.querySelectorAll('.block-unblock-btn').forEach(button => {
+    button.addEventListener('click', async (e) => {
+      const categoryId = e.target.getAttribute('data-id');
+      const action = e.target.getAttribute('data-action'); // 'block' or 'unblock'
+
+      try {
+        const response = await fetch(`/admin/categories/${categoryId}/${action}`, {
+          method: 'POST',
+        });
+
+        const result = await response.json();
+        console.log('Response Data:', result);
+        if (response.ok) {
+          // Show SweetAlert based on action (block/unblock)
+          Swal.fire({
+            title: action === 'block' ? 'Blocked!' : 'Unblocked!',
+            text: `Category has been ${action}ed successfully.`,
             icon: 'success',
-            title: title,
-            text: message
-        }).then(() => {
-            if (reload) location.reload();
-        });
-    }
-
-    // Reusable function for SweetAlert error
-    function showErrorAlert(message) {
-        Swal.fire({
-            icon: 'error',
+            confirmButtonText: 'OK'
+          }).then(() => {
+            // Reload the page to reflect the change
+            window.location.reload();
+          });
+        } else {
+          // Handle error
+          Swal.fire({
             title: 'Error',
-            text: message
+            text: result.message || 'Something went wrong!',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        }
+      } catch (error) {
+       
+        // Handle fetch error
+        Swal.fire({
+          title: 'Error',
+          text: 'Could not complete the request.',
+          icon: 'error',
+          confirmButtonText: 'OK'
         });
-    }
-
-    // Handle List/Unlist form submission for soft deleting or restoring categories
-    document.querySelectorAll('.toggle-category-form').forEach(form => {
-        form.addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const categoryId = this.getAttribute('data-id');
-            const isDeleted = this.getAttribute('data-status') === 'true';
-            const action = isDeleted ? 'list' : 'unlist';
-            const endpoint = `/admin/delete/${categoryId}`;
-
-            try {
-                const response = await fetch(endpoint, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ isDeleted: !isDeleted })
-                });
-
-                if (response.ok) {
-                    showSuccessAlert(`Category ${isDeleted ? 'Listed' : 'Unlisted'}`, 
-                                     `The category has been ${isDeleted ? 'listed' : 'unlisted'} successfully.`, 
-                                     true);
-                } else {
-                    throw new Error('Failed to update category status');
-                }
-            } catch (error) {
-                showErrorAlert(error.message);
-            }
-        });
+      }
     });
-
-    // Handle Edit Category form submission
-    document.querySelectorAll('.edit-category-form').forEach(form => {
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const categoryId = this.dataset.id;
-            const name = this.querySelector(`input[name="name"]`).value;
-
-            try {
-                const response = await fetch(`/admin/editCategory/${categoryId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ name })
-                });
-
-                if (response.ok) {
-                    showSuccessAlert('Category Updated', `The category name has been updated to "${name}".`, true);
-                } else {
-                    const result = await response.json();
-                    throw new Error(result.message || 'Failed to update category');
-                }
-            } catch (error) {
-                showErrorAlert(error.message);
-            }
-        });
-    });
-</script>
-
-</script>
-
-
-
-        
-
-
+  });
+  </script>
+  

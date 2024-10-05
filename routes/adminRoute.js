@@ -30,15 +30,19 @@ admin.post('/addCategory', categoryController.addCategory);
 admin.get('/editCategory', categoryController.geteditCategories);
 admin.get('/editCategory/:id', categoryController.renderEditCategoryForm);
 admin.post('/editCategory/:id', categoryController.editCategory);
-admin.delete('/delete/:id', categoryController.softDeleteCategory);
+admin.post('/categories/:id/block', categoryController.blockCategory);
+admin.post('/categories/:id/unblock', categoryController.unblockCategory);
 admin.get('/categories', categoryController.getCategoriesForUser);
 
 
 // //--------------------------------ProductManagment----------------------------
 admin.get('/addProduct', productController.getProduct);
-admin.post('/addProduct', multerUpload,productController.addProduct);
+// admin.post('/addProduct', multerUpload,productController.addProduct);
+ admin.post('/addProduct',productController.addProduct);
 admin.get('/editProduct', productController.geteditProduct);
 admin.post('/editProduct/:id', productController.editProduct);
+admin.post('/listProduct/:id', productController.listProduct);
+admin.post('/unlistProduct/:id', productController.unlistProduct);
 
 
 // // admin.delete('/delete/:id', categoryController.softDeleteCategory);

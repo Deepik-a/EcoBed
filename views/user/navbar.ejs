@@ -265,20 +265,20 @@
             <img src="/public/assets/logo.png" alt="logo" class="logo-img">
             <h3 class="text-white header ms-3">ECHO EMPORIUM</h3>
         </div>
-        <form action="" class="search-nav d-flex">
+        <form action="/search" method="POST" class="search-nav d-flex">
             <input type="text" name="search" class="form-input" placeholder="search">
             <button type="submit" class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
         <ul class="user-nav-icon d-flex">
             <li><a href="/">Home</a></li>
-            <div class="dropdown">
-                <a href="/categories" class="dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown">Category</a>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="categoryDropdown">
-                  <!-- Categories will be dynamically added here -->
-                </ul>
-            </div>
-            
-            <li><a href="/login">Login</a></li>
+         
+            <li>  <% if (user) { %>
+                <a class="nav-link-items user-login-icon" href="/userprofile">
+                    <i class="fa-solid fa-user"></i>
+                </a>
+                <% } else { %>
+                    <a href="/login" >Login</a>
+                    <% } %></li>
             
             <!-- Cart Icon -->
             <li><a href="/cart"><i class="fa-solid fa-cart-shopping"></i></a></li>
@@ -292,36 +292,7 @@
         
     </div>
 </div>
-<script>
-document.getElementById('dropdownMenuButton').addEventListener('click', function() {
-    fetch('/categories')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.text(); // Read the response as text
-        })
-        .then(text => {
-            try {
-                const data = JSON.parse(text); // Try to parse the text as JSON
-                console.log('Fetched categories:', data);
-                console.log("shjtj",data)
-                const dropdownMenu = document.getElementById('categoryDropdown');
-                dropdownMenu.innerHTML = '';
 
-                data.forEach(category => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `<a class="dropdown-item" href="/categories">${category.name}</a>`;
-                    dropdownMenu.appendChild(li);
-                });
-            } catch (error) {
-                console.error('Error parsing JSON:', error);
-            }
-        })
-        .catch(error => console.error('Error fetching categories:', error));
-});
-
-   </script>
    
 
 

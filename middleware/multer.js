@@ -1,28 +1,32 @@
-const multer = require('multer')
-const path=require('path')
+const multer = require('multer');
+const path = require('path');
 
 const storage = multer.diskStorage({
-
-    //--------------------- files will be saved location -----------------------
-
-    destination: function(req,file,cb){
-        cb(null,path.join(__dirname, '../uploads'))
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, '../uploads'));
     },
-
-    //------------------ file name of the file to be saved ---------------------
-
     filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-        cb(null, uniqueSuffix + `-${file.originalname}`)
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + `-${file.originalname}`);
     }
-})
+});
 
-const upload = multer({
-    storage:storage,
-})
+const uploads = multer({
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB size limit
+    fileFilter: (req, file, cb) => {
+        const filetypes = /jpeg|jpg|png|gif/; // Allowed file types
+        const mimetype = filetypes.test(file.mimetype);
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
 
-//------------------------------------ Multer upload ---------------------------------
+        if (mimetype && extname) {
+            return cb(null, true);
+        }
+        cb(null, false); // Instead of throwing an error, reject the file
+    }
+});
 
-const multerUpload = upload.array('images',3);
+// Multer upload handler (limit 3 files)
+const multerUpload = uploads.array('productImages', 3);
 
-module.exports = multerUpload ;
+module.exports = multerUpload;

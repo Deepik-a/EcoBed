@@ -18,50 +18,53 @@
       <!-- Form Column -->
       <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
         <form action="/signup" method="post" id="register-form">
-          
           <!-- Name -->
           <div class="form-outline mb-4">
-            <input type="text" name="name" required id="form1Example13" class="form-control form-control-lg" />
-            <label class="form-label" for="form1Example13">Name</label>
+            <input type="text" name="name" id="name" class="form-control form-control-lg" />
+            <label class="form-label" for="name">Name</label>
+            <small id="nameError" class="text-danger"></small> <!-- Error placeholder -->
           </div>
-  
+        
           <!-- Email input -->
           <div class="form-outline mb-4">
-            <input type="email" name="email"  required id="form1Example13" class="form-control form-control-lg" />
-            <label class="form-label" for="form1Example13">Email address</label>
+            <input type="email" name="email" id="email" class="form-control form-control-lg" />
+            <label class="form-label" for="email">Email address</label>
+            <small id="emailError" class="text-danger"></small> <!-- Error placeholder -->
           </div>
-  
+        
           <!-- Phone input -->
           <div class="form-outline mb-4">
-            <input type="text" name="phone" required id="form1Example23" class="form-control form-control-lg" />
-            <label class="form-label" for="form1Example23">Phone Number</label>
+            <input type="text" name="phone" id="phone" class="form-control form-control-lg" />
+            <label class="form-label" for="phone">Phone Number</label>
+            <small id="phoneError" class="text-danger"></small> <!-- Error placeholder -->
           </div>
-  
-<!-- Password input -->
-<div class="form-outline mb-4 position-relative">
-  <input type="password" name="password" required id="password" class="form-control form-control-lg" />
-  <label class="form-label" for="password">Password</label>
-  <span id="toggle-password-1" class="position-absolute top-50 end-0 translate-middle-y me-3">
-    <i class="bi bi-eye-slash"></i>
-  </span>
-</div>
-
-<!-- Confirm Password input -->
-<div class="form-outline mb-4 position-relative">
-  <input type="password" name="confirmpassword" required id="confirmpassword" class="form-control form-control-lg" />
-  <label class="form-label" for="confirmpassword">Confirm Password</label>
-  <span id="toggle-password-2" class="position-absolute top-50 end-0 translate-middle-y me-3">
-    <i class="bi bi-eye-slash"></i>
-  </span>
-</div>
-
-
-  
+        
+          <!-- Password input -->
+          <div class="form-outline mb-4 position-relative">
+            <input type="password" name="password" id="password" class="form-control form-control-lg" />
+            <label class="form-label" for="password">Password</label>
+            <small id="passwordError" class="text-danger"></small> <!-- Error placeholder -->
+            <span id="toggle-password-1" class="position-absolute top-50 end-0 translate-middle-y me-3">
+              <i class="bi bi-eye-slash"></i>
+            </span>
+          </div>
+        
+          <!-- Confirm Password input -->
+          <div class="form-outline mb-4 position-relative">
+            <input type="password" name="confirmpassword" id="confirmpassword" class="form-control form-control-lg" />
+            <label class="form-label" for="confirmpassword">Confirm Password</label>
+            <small id="confirmPasswordError" class="text-danger"></small> <!-- Error placeholder -->
+            <span id="toggle-password-2" class="position-absolute top-50 end-0 translate-middle-y me-3">
+              <i class="bi bi-eye-slash"></i>
+            </span>
+          </div>
+        
           <!-- Submit button -->
-          <button type="submit" class="btn btn-secondary btn-lg btn-block" id="register-btn"style="background-color: rgb(80, 141, 78); color: white;">
+          <button type="submit" class="btn btn-secondary btn-lg btn-block" id="register-btn" style="background-color: rgb(80, 141, 78); color: white;">
             Signup
           </button>
         </form>
+        
       </div>
     </div>
   </div>
@@ -71,98 +74,161 @@
 
 
   <!-----------------------------------------------------------validation--------------------------> 
-
-
-
   <script>
-document.getElementById('toggle-password-1').addEventListener('click', function () {
-    togglePassword('password', this);
-});
-
-document.getElementById('toggle-password-2').addEventListener('click', function () {
-    togglePassword('confirmpassword', this);
-});
-
-function togglePassword(id, toggle) {
-    const pass = document.getElementById(id);
-    const type = pass.getAttribute('type') === 'password' ? 'text' : 'password';
-    pass.setAttribute('type', type);
-    toggle.innerHTML = type === 'password' ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
-}
-
-
-    const registerForm = document.getElementById('register-form')[0]
-    const name = document.getElementsByName('name')[0]
-    const phone = document.getElementsByName('phone')[0]
-    const email = document.getElementsByName('email')[0]
-    const password = document.getElementsByName('password')[0]
-    const confirmPassword = document.getElementsByName('confirmpassword')[0]
-    const signUpButton = document.getElementById('register-btn')
-
+    // Clear error messages function
+    function clearErrors() {
+      document.getElementById('nameError').textContent = "";
+      document.getElementById('emailError').textContent = "";
+      document.getElementById('phoneError').textContent = "";
+      document.getElementById('passwordError').textContent = "";
+      document.getElementById('confirmPasswordError').textContent = "";
+    }
+    
+    // Toggle password visibility function
+    function togglePassword(id, toggle) {
+      const pass = document.getElementById(id);
+      const type = pass.getAttribute('type') === 'password' ? 'text' : 'password';
+      pass.setAttribute('type', type);
+      toggle.innerHTML = type === 'password' ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
+    }
+    
+    // Email validation function
     function checkEmail(email) {
-        const re = /\S+@\S+\.\s+/;
-        return re.test(email)
+      const re = /^\S+@\S+\.\S+$/;
+      return re.test(email);
     }
+    
+    // Password validation function
     function validatePassword(password) {
-        if (password.length < 8) {
-            return false
-        }
-
-        if (!/[A-Z]/.test(password)) {
-            return false
-        }
-
-        if (!/[a-z]/.test(password)) {
-            return false
-        }
-
-        if (!/\d/.test(password)) {
-            return false
-        }
-        if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
-            return false;
-        }
-        return true
+      return password.length >= 8 &&
+             /[A-Z]/.test(password) &&
+             /[a-z]/.test(password) &&
+             /\d/.test(password) &&
+             /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
     }
+    
+    // Phone validation function
     function validatePhone(phone) {
-        const phoneRe = /^\d{10}$/;
-        return phoneRe.test(phone);
+      const phoneRe = /^\d{10}$/;
+      return phoneRe.test(phone);
     }
-
-    registerForm.addEventListener('submit', (e) => {
-        e.preventDefault()
-        if (name.value.trim() === "" || name.value.length > 25 || name.value.length < 5 || !isNaN(name.value)) {
-            Swal.fire({
-                title: "Error",
-                text: "Name must not be empty ,Minimum 6 letters , must be within 30 charters long and should not contain numbers",
-                icon: "error"
-            });
-        } else if (!validatePhone(phone.value)) {
-            Swal.fire({
-                title: "Error",
-                text: "Phone number must be 10 digits",
-                icon: "error"
-            });
-        } else if (checkEmail(email.value)) {
-            Swal.fire({
-                title: "Error",
-                text: "Email must be valid",
-                icon: "error"
-            });
-        } else if (!validatePassword(password.value)) {
-            Swal.fire({
-                title: "Error",
-                text: "Enter a strong password",
-                icon: "error"
-            });
-        } else if (password.value != confirmpassword.value) {
-            Swal.fire({
-                title: "Error",
-                text: "Password Must be same",
-                icon: "error"
-            });
-        } else {
-            registerForm.submit()
-        }
-    })
-</script>
+    
+    // Event listener for form submission
+    document.getElementById('register-form').addEventListener('submit', function(event) {
+      // Prevent form submission initially
+      event.preventDefault();
+    
+      // Clear any previous errors
+      clearErrors();
+    
+      let hasError = false;
+    
+      // Get form values
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const confirmPassword = document.getElementById('confirmpassword').value.trim();
+    
+      // Validate Name
+      if (name === "") {
+        Swal.fire({
+          title: "Error",
+          text: "Name is required",
+          icon: "error"
+        });
+        hasError = true;
+      } else if (name.length < 5 || name.length > 25 || !isNaN(name)) {
+        Swal.fire({
+          title: "Error",
+          text: "Name must be between 5 and 25 characters long, and should not contain numbers",
+          icon: "error"
+        });
+        hasError = true;
+      }
+    
+      // Validate Email
+      if (email === "") {
+        Swal.fire({
+          title: "Error",
+          text: "Email is required",
+          icon: "error"
+        });
+        hasError = true;
+      } else if (!checkEmail(email)) {
+        Swal.fire({
+          title: "Error",
+          text: "Email must be valid",
+          icon: "error"
+        });
+        hasError = true;
+      }
+    
+      // Validate Phone
+      if (phone === "") {
+        Swal.fire({
+          title: "Error",
+          text: "Phone number is required",
+          icon: "error"
+        });
+        hasError = true;
+      } else if (!validatePhone(phone)) {
+        Swal.fire({
+          title: "Error",
+          text: "Phone number must be 10 digits",
+          icon: "error"
+        });
+        hasError = true;
+      }
+    
+      // Validate Password
+      if (password === "") {
+        Swal.fire({
+          title: "Error",
+          text: "Password is required",
+          icon: "error"
+        });
+        hasError = true;
+      } else if (!validatePassword(password)) {
+        Swal.fire({
+          title: "Error",
+          text: "Password must be at least 8 characters long, contain uppercase, lowercase, a number, and a special character",
+          icon: "error"
+        });
+        hasError = true;
+      }
+    
+      // Validate Confirm Password
+      if (confirmPassword === "") {
+        Swal.fire({
+          title: "Error",
+          text: "Confirm password is required",
+          icon: "error"
+        });
+        hasError = true;
+      } else if (password !== confirmPassword) {
+        Swal.fire({
+          title: "Error",
+          text: "Passwords do not match",
+          icon: "error"
+        });
+        hasError = true;
+      }
+    
+      // If no errors, submit the form
+      if (!hasError) {
+        document.getElementById('register-form').submit();
+      }
+    });
+    
+    // Event listeners for password toggling
+    document.getElementById('toggle-password-1').addEventListener('click', function() {
+      togglePassword('password', this);
+    });
+    
+    document.getElementById('toggle-password-2').addEventListener('click', function() {
+      togglePassword('confirmpassword', this);
+    });
+    </script>
+    
+    

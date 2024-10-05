@@ -6,6 +6,7 @@ const addressSchema = require("../../model/addressSchema");
 const profile = async (req, res) => {
   try {
     console.log(req.session.user);
+  
 
     const userId = req.session.user;
     const userDetail = await userSchema.findById(userId);

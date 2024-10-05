@@ -20,47 +20,49 @@
                 <div class="nav-item ">
                     <a href="#" class="nav-link dropdown-toggle" ><i class="fa fa-laptop me-2"></i>Sales Report</a>
                 </div>
-                  <!-- Category Section with Toggle -->
-            <div class="nav-item">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#productMenu">
-                    <i class="fa fa-keyboard me-2"></i>Category
+             <!-- Category Section with Toggle -->
+<div class="nav-item">
+    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#CategoryMenu" id="categoryMenuLink">
+        <i class="fa fa-keyboard me-2"></i>Category
+    </a>
+    <div id="CategoryMenu" class="collapse">
+        <ul class="navbar-nav ps-3">
+            <li class="nav-item">
+                <a href="/admin/addCategory" class="nav-link">
+                    <i class="fa fa-plus me-2"></i>Add Category
                 </a>
-                <div id="productMenu" class="collapse">
-                    <ul class="navbar-nav ps-3">
-                        <li class="nav-item">
-                            <a href="/admin/addCategory" class="nav-link">
-                                <i class="fa fa-plus me-2"></i>Add Category
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/admin/editCategory" class="nav-link">
-                                <i class="fa fa-list me-2"></i>Category List
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-                <!-- Product Section with Toggle -->
-            <div class="nav-item">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#productMenu">
-                    <i class="fa fa-keyboard me-2"></i>Products
+            </li>
+            <li class="nav-item">
+                <a href="/admin/editCategory" class="nav-link">
+                    <i class="fa fa-list me-2"></i>Category List
                 </a>
-                <div id="productMenu" class="collapse">
-                    <ul class="navbar-nav ps-3">
-                        <li class="nav-item">
-                            <a href="/admin/addProduct" class="nav-link">
-                                <i class="fa fa-plus me-2"></i>Add Product
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/admin/editProduct" class="nav-link">
-                                <i class="fa fa-list me-2"></i>Product List
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-                <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Customers</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- Product Section with Toggle -->
+<div class="nav-item">
+    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#productMenu" id="productMenuLink">
+        <i class="fa fa-keyboard me-2"></i>Products
+    </a>
+    <div id="productMenu" class="collapse">
+        <ul class="navbar-nav ps-3">
+            <li class="nav-item">
+                <a href="/admin/addProduct" class="nav-link">
+                    <i class="fa fa-plus me-2"></i>Add Product
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/admin/editProduct" class="nav-link">
+                    <i class="fa fa-list me-2"></i>Product List
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+                <a href="/admin/users" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Customers</a>
                 <a href="chart.html" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Coupons</a>
                 <a href="chart.html" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Offers</a>
                 <a href="chart.html" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Popups</a>
@@ -233,5 +235,25 @@
 
         <!-- Sales Chart End -->
 
-
+        <script>
+            // Wait until the document is fully loaded
+            document.addEventListener("DOMContentLoaded", function () {
+                const categoryMenu = document.getElementById('CategoryMenu');
+                const productMenu = document.getElementById('productMenu');
+                
+                // Add event listener for the category menu
+                categoryMenu.addEventListener('show.bs.collapse', function () {
+                    if (productMenu.classList.contains('show')) {
+                        bootstrap.Collapse.getInstance(productMenu).hide();
+                    }
+                });
+            
+                // Add event listener for the product menu
+                productMenu.addEventListener('show.bs.collapse', function () {
+                    if (categoryMenu.classList.contains('show')) {
+                        bootstrap.Collapse.getInstance(categoryMenu).hide();
+                    }
+                });
+            });
+            </script>
        

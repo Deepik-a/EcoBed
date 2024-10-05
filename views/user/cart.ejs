@@ -15,164 +15,72 @@
 <%-include('navbar') %>
 
 
+<div class="container mt-5">
+    <h2>Your Cart</h2>
 
-<link href="../../public/css/user.css" rel="stylesheet">
-
-
-
-<style>
-    body{
-        background-color: rgb(214, 239, 216);
-    }
-    
-    .hero{
-				background-color:rgb(26, 83, 25);
-			}
-</style>
-<!-- Start Hero Section -->
-	<!-- Start Hero Section -->
-    <div class="hero" style="padding: 0; ">
-        <div class="container" style="padding: 0;">
-                <div style="padding-top: 0; padding-bottom: 0;">
-                        <h1 style="text-align: center;">Your Cart</h1>
-                    </div>
-                </div>
+    <!-- Check if there's an alertMessage and display it as a Bootstrap alert -->
+    <% if (typeof alertMessage !== 'undefined') { %>
+        <div class="alert alert-warning" role="alert">
+            <%= alertMessage %>
         </div>
-    
-    <!-- End Hero Section -->
+    <% } %>
 
-<!-- End Hero Section -->
-
-
-
-<div class="untree_co-section before-footer-section">
-    <div class="container">
-      <div class="row mb-5">
-        <form class="col-md-12" method="post">
-          <div class="site-blocks-table">
-            <table class="table">
-              <thead>
+    <!-- If there are items in the cart -->
+    <% if (cart.items && cart.items.length > 0) { %>
+        <table class="table table-bordered">
+            <thead>
                 <tr>
-                  <th class="product-thumbnail">Image</th>
-                  <th class="product-name">Product</th>
-                  <th class="product-price">Price</th>
-                  <th class="product-quantity">Quantity</th>
-                  <th class="product-total">Total</th>
-                  <th class="product-remove">Remove</th>
+                    <th>Image</th> <!-- New column for product image -->
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Action</th>
                 </tr>
-              </thead>
-              <tbody>
+            </thead>
+            <tbody>
+            <% cart.items.forEach(item => { %>
                 <tr>
-                  <td class="product-thumbnail">
-                    <img src="images/product-1.png" alt="Image" class="img-fluid">
-                  </td>
-                  <td class="product-name">
-                    <h2 class="h5 text-black">Product 1</h2>
-                  </td>
-                  <td>$49.00</td>
-                  <td>
-                    <div class="input-group mb-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
-                      <div class="input-group-prepend">
-                        <button class="btn btn-outline-black decrease" type="button">&minus;</button>
-                      </div>
-                      <input type="text" class="form-control text-center quantity-amount" value="1" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
-                      <div class="input-group-append">
-                        <button class="btn btn-outline-black increase" type="button">&plus;</button>
-                      </div>
-                    </div>
-
-                  </td>
-                  <td>$49.00</td>
-                  <td><a href="#" class="btn btn-black btn-sm">X</a></td>
+                    <td>
+                        <!-- Display the product image, using the first image from the imgArray or default -->
+                        <img src="<%= item.productImage %>" alt="Product Image" style="width: 100px;" />
+                    </td>
+                    <td><%= item.productId.name %></td> <!-- Product name -->
+                    <td>$<%= item.productPrice %></td> <!-- Product price -->
+                    <td>
+                        <!-- Form to update quantity -->
+                        <form action="/cart/update/<%= item.productId._id %>" method="POST" style="display: inline;">
+                          <!-- Ensure that the quantity cannot exceed stock -->
+                          <input type="number" name="productCount" value="<%= item.productCount %>" min="1" max="<%= item.productId.stock %>" style="width: 50px;">
+                          <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                        </form>
+                        <!-- Display stock message if quantity exceeds stock -->
+                        <% if (item.productCount >= item.productId.stock) { %>
+                            <p class="text-danger">Only <%= item.productId.stock %> left in stock</p>
+                        <% } %>
+                    </td>
+                    <td>$<%= item.productPrice * item.productCount %></td> <!-- Total for this product -->
+                    <td>
+                        <!-- Button to remove item from cart -->
+                        <a href="/cart/remove/<%=item.productId._id %>" class="btn btn-danger">Remove</a>
+                    </td>
                 </tr>
+            <% }); %>
+            </tbody>
+        </table>
 
-                <tr>
-                  <td class="product-thumbnail">
-                    <img src="images/product-2.png" alt="Image" class="img-fluid">
-                  </td>
-                  <td class="product-name">
-                    <h2 class="h5 text-black">Product 2</h2>
-                  </td>
-                  <td>$49.00</td>
-                  <td>
-                    <div class="input-group mb-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
-                      <div class="input-group-prepend">
-                        <button class="btn btn-outline-black decrease" type="button">&minus;</button>
-                      </div>
-                      <input type="text" class="form-control text-center quantity-amount" value="1" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
-                      <div class="input-group-append">
-                        <button class="btn btn-outline-black increase" type="button">&plus;</button>
-                      </div>
-                    </div>
+        <!-- Calculate and display the total cart price -->
+        <h4>Total Amount: $<%= cart.items.reduce((total, item) => total + (item.productPrice * item.productCount), 0) %></h4>
 
-                  </td>
-                  <td>$49.00</td>
-                  <td><a href="#" class="btn btn-black btn-sm">X</a></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </form>
-      </div>
+        <!-- Button to proceed to checkout -->
+        <a href="/checkout" class="btn btn-success">Proceed to Checkout</a>
 
-      <div class="row">
-        <div class="col-md-6">
-          <div class="row mb-5">
-            <div class="col-md-6 mb-3 mb-md-0">
-              <button class="btn btn-black btn-sm btn-block">Update Cart</button>
-            </div>
-            <div class="col-md-6">
-              <button class="btn btn-outline-black btn-sm btn-block">Continue Shopping</button>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <label class="text-black h4" for="coupon">Coupon</label>
-              <p>Enter your coupon code if you have one.</p>
-            </div>
-            <div class="col-md-8 mb-3 mb-md-0">
-              <input type="text" class="form-control py-3" id="coupon" placeholder="Coupon Code">
-            </div>
-            <div class="col-md-4">
-              <button class="btn btn-black">Apply Coupon</button>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6 pl-5">
-          <div class="row justify-content-end">
-            <div class="col-md-7">
-              <div class="row">
-                <div class="col-md-12 text-right border-bottom mb-5">
-                  <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
-                </div>
-              </div>
-              <div class="row mb-3">
-                <div class="col-md-6">
-                  <span class="text-black">Subtotal</span>
-                </div>
-                <div class="col-md-6 text-right">
-                  <strong class="text-black">$230.00</strong>
-                </div>
-              </div>
-              <div class="row mb-5">
-                <div class="col-md-6">
-                  <span class="text-black">Total</span>
-                </div>
-                <div class="col-md-6 text-right">
-                  <strong class="text-black">$230.00</strong>
-                </div>
-              </div>
+    <% } else { %>
+        <!-- Message when cart is empty -->
+        <p>Your cart is empty.</p>
+    <% } %>
+</div>
 
-              <div class="row">
-                <div class="col-md-12">
-                  <button class="btn btn-black btn-lg py-3 btn-block" onclick="window.location='checkout.html'">Proceed To Checkout</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+
 
   <%-include('footer') %>

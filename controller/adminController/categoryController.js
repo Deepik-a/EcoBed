@@ -76,24 +76,54 @@ const renderEditCategoryForm = async (req, res) => {
 };
 
 
-// Soft delete a category
-const softDeleteCategory = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const deletedCategory = await categorySchema.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
-        
-        if (!deletedCategory) {
-            return res.status(404).json({ message: 'Category not found' });
-        }
 
-        // Send success response
-        res.status(200).json({ message: 'Category unlisted successfully' });
-    } catch (error) {
-        console.error(`Error while unlisting category: ${error}`);
-        res.status(500).json({ message: 'Failed to unlist category' });
+
+// Block a category
+const blockCategory = async (req, res) => {
+  try {
+    const categoryId = req.params.id;
+
+    // Find the category by ID and update isDeleted to true (blocked)
+    const category = await categorySchema.findByIdAndUpdate(
+      categoryId,
+      { isDeleted: true },
+      { new: true }
+    );
+
+    if (!category) {
+      return res.status(404).json({ message: 'Category not found' });
     }
+
+    return res.status(200).json({ message: 'Category blocked', category });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error blocking category', error });
+  }
 };
-// Get categories for user side (non-deleted)
+
+// Unblock a category
+const unblockCategory = async (req, res) => {
+  try {
+    const categoryId = req.params.id;
+
+    // Find the category by ID and update isDeleted to false (unblocked)
+    const category = await categorySchema.findByIdAndUpdate(
+      categoryId,
+      { isDeleted: false },
+      { new: true }
+    );
+
+    if (!category) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
+
+    return res.status(200).json({ message: 'Category unblocked', category });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error unblocking category', error });
+  }
+};
+
+
+
 const getCategoriesForUser = async (req, res) => {
 
     try {
@@ -114,8 +144,9 @@ module.exports = {
     addCategory,
     editCategory,
     renderEditCategoryForm,
-    softDeleteCategory,
     geteditCategories,
-    getCategoriesForUser
+    getCategoriesForUser,
+    blockCategory,
+    unblockCategory 
   
 };

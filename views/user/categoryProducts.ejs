@@ -1,0 +1,98 @@
+
+<%- include('navbar') %>
+
+
+
+
+<h1 class="text-success text-center my-4"> <%= categoryName %></h1>
+<% if (products.length > 0) { %>
+    <!-- Add 'pl-4' class for left padding -->
+    <div class="row justify-content-center pl-4">
+        <% products.forEach(product => { %>
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 shadow-sm border-success">
+                    <!-- Display Product Images -->
+                    <div id="productCarousel<%= product._id %>" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <% if (product.imgArray.length > 0) { %>
+                                <% product.imgArray.forEach((img, index) => { %>
+                                    <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                        <img class="d-block w-100" src="<%= img %>" alt="Product Image <%= index + 1 %>">
+                                    </div>
+                                <% }) %>
+                            <% } else { %>
+                                <div class="carousel-item active">
+                                    <p class="text-center">No images available</p>
+                                </div>
+                            <% } %>
+                        </div>
+                        
+                        <% if (product.imgArray.length > 1) { %>
+                            <a class="carousel-control-prev" href="#productCarousel<%= product._id %>" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#productCarousel<%= product._id %>" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        <% } %>
+                    </div>
+
+                    <!-- Display Product Details -->
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-success"><%= product.name %></h5>
+                        <p class="card-text">Price: $<%= product.price %></p>
+                        <p class="card-text">Stock: <%= product.stock %> units</p>
+                        <p class="card-text"><%= product.description %></p>
+                        
+                        <!-- Check if Product is Active -->
+                        <% if (product.isActive) { %>
+                            <a href="/product/<%= product._id %>" class="btn btn-outline-success">
+                                Detailed View
+                            </a>
+                        <% } else { %>
+                            <a href="#" class="btn btn-outline-danger" onclick="return false;">
+                                Out of Stock
+                            </a>
+                        <% } %>
+
+                    </div>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+<% } else { %>
+    <p class="text-center text-success">No products found in this category</p>
+<% } %>
+
+<!-- Bootstrap Carousel CSS -->
+<style>
+    .carousel-inner img {
+            object-fit: cover;
+        height: 300px;
+        width:600px;
+    }
+    .card {
+        border-color: #28a745 !important;
+    }
+    .card-title {
+        color: #28a745;
+    }
+    .card-text {
+        color: #6c757d;
+    }
+    .btn-outline-success {
+        color: #28a745;
+        border-color: #28a745;
+    }
+    .btn-outline-success:hover {
+        background-color: #28a745;
+        color: white;
+    }
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+</style>
+<%- include('footer') %>

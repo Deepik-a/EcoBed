@@ -1,18 +1,14 @@
 const userSchema = require("../../model/userSchema");
+const categorySchema=require('../../model/categorySchema')
 const bcrypt = require("bcrypt");
 
 const sendOTP = require("../../services/emailSender");
 const generateotp = require("../../services/otpgenerator");
 
-const user = (req, res) => {
-  try {
-    console.log('home');
-    
-    res.render("user/home");
-  } catch (error) {
-    console.log(`error while rendering the page ${error}`);
-  }
-};
+const passport = require('passport')
+const auth = require('../../services/passport')
+
+
 
 const signup = (req, res) => {
   try {
@@ -128,33 +124,61 @@ res.redirect('/otp')
 }
 
 
-const login = (req, res) => {
-  if (req.session.user) {
-    res.redirect('/home')
-  } else {
-    res.render('user/login', { title: 'Login', user: req.session.user })
-  }
-}
+// GET login page
+const login = async(req, res) => {
+  const categories=await categorySchema.find({isDeleted:false})
 
-  
-const loginpost=async (req,res)=>{
-  console.log('loginpost');
-  console.log(req.body);
-  
-  
-  try{
-    const user=await userSchema.findOne({email:req.body.email})
-if(user){
-  req.session.user = user; // Set session to render the userProfile
-  console.log('User found and session set:', req.session.user);
-  res.render('user/Landingpage')
-}else{
-  res.redirect('/login')
-}
-  }catch(error){
-    console.log(`error while resend otp ${error}`)
+  if (req.session.user) {
+    res.render('user/Landingpage',{categories}); // Redirect if the user is already logged in
+  } else {
+    res.render('user/login', { title: 'Login', user: req.session.user });
   }
-}
+};
+
+// POST login form handler
+const loginpost = async (req, res) => {
+  try {
+    console.log('loginpost');
+    console.log(req.body);
+
+    const { email, password } = req.body;
+
+    // Find user by email
+    const user = await userSchema.findOne({ email });
+    const categories=await categorySchema.find({isDeleted:false})
+
+
+    if (!user) {
+      // If user is not found, redirect to login with an error flag
+      return res.redirect('/login?error=userNotFound');
+    }
+
+    // Check if the user is blocked
+    if (user.isBlocked) {
+      // If the user is blocked, redirect to login with the blocked error flag
+      return res.redirect('/login?error=blocked');
+    }
+
+    // // Check if password matches (assuming bcrypt is used for hashing passwords)
+    // const isMatch = await bcrypt.compare(password, user.password); 
+    // if (!isMatch) {
+    //   // If password does not match, redirect to login with invalid password error
+    //   return res.redirect('/login?error=invalidPassword');
+    // }
+
+    // Set session for the logged-in user
+    req.session.user = user;
+    console.log('User found and session set:', req.session.user);
+    
+
+    // Redirect to the landing page after successful login
+    res.render('user/LandingPage',{categories});
+  } catch (error) {
+    console.log(`Error during login: ${error}`);
+    // Handle server errors with a generic error flag
+    res.redirect('/login?error=serverError');
+  }
+};
 
 const logout = (req, res) => {
   try {
@@ -170,12 +194,37 @@ const logout = (req, res) => {
 }
 
 
+// //-------------------------------------- google auth -----------------------------------
+
+// const googleAuth = (req, res) => {
+ 
+//   try {
+//     passport.authenticate('google', {
+//       scope: ['email', 'profile']
+//     })
+//   } catch (err) {
+//     console.log(`Error on google authentication ${err}`)
+//   }
+// }
+
+
+// //----------------------------------- google auth callback  ----------------------------
+
+// const googleAuthCallback = (req, res, next) => {
+//   console.log("googleAuthCallback") 
+//     passport.authenticate('google', { failureRedirect: '/' }),
+//     (req, res) => {
+//       res.render("user/home");
+//     };
+// }
+
+
 
 
 
 
 module.exports = {
-  user,
+
   signup,
   signupPost,
   otp,
@@ -183,5 +232,7 @@ module.exports = {
 otpResend,
 login,
 loginpost,
-logout
+logout,
+// googleAuth ,
+// googleAuthCallback
 };

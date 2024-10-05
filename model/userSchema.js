@@ -10,17 +10,18 @@ const schema=new mongoose.Schema({
         type:Number
     },
     email:{
-        type:String,
-        required:true
+        type:String,      
     },
     password: {
         type:String,
-        required:true
     },
     address:{
         type:[addressSchema],
         default:[]
       },
+      googleID: {
+        type: String
+    },
     isActive:{       //whether the user is active
       type:Boolean,
       default:true  // By making a user's account active automatically
