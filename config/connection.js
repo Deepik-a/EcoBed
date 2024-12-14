@@ -10,6 +10,4 @@ console.log("mongoDB connected");
 }
 }
 
-
-
 module.exports= connectDB
